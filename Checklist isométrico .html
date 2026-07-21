@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Isométricos - Quality Engineering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --navy-header: #0f172a;
+            --navy-sub: #1e293b;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --primary-light: #e0f2fe;
+            --accent-cyan: #38bdf8;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --border-color: #cbd5e1;
+            --border-subtle: #e2e8f0;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --code-bg: #e2e8f0;
+            --code-text: #0369a1;
+            --svg-stroke: #334155;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #090d16;
+            --bg-card: #131c2e;
+            --navy-header: #070a12;
+            --navy-sub: #1a263d;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #38bdf8;
+            --primary-light: #1e293b;
+            --success-light: #064e3b;
+            --border-color: #334155;
+            --border-subtle: #1e293b;
+            --danger-light: #7f1d1d;
+            --code-bg: #1e293b;
+            --code-text: #38bdf8;
+            --svg-stroke: #94a3b8;
+            --glass-bg: rgba(19, 28, 46, 0.95);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- HEADER & NAVBAR SUPERIOR --- */
+        .navbar { 
+            background-color: var(--navy-header); 
+            border-bottom: 1px solid #334155; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: var(--shadow-md); 
+        }
+        
+        .nav-container { 
+            max-width: 1350px; 
+            margin: 0 auto; 
+            padding: 0 24px; 
+            height: 70px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        
+        .brand { 
+            font-size: 18px; 
+            font-weight: 700; 
+            color: #ffffff; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            text-decoration: none; 
+            letter-spacing: 0.5px;
+        }
+        
+        .brand i { color: var(--accent-cyan); font-size: 22px; }
+        
+        .nav-links { display: flex; gap: 8px; align-items: center; }
+        
+        .nav-btn { 
+            background: transparent; 
+            border: 1px solid transparent; 
+            padding: 8px 16px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: #94a3b8; 
+            cursor: pointer; 
+            border-radius: 6px; 
+            transition: all 0.2s ease; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        
+        .nav-btn:hover { background-color: var(--navy-sub); color: #ffffff; }
+        
+        .nav-btn.active { 
+            background-color: #0284c7; 
+            color: #ffffff; 
+            box-shadow: 0 0 12px rgba(2, 132, 199, 0.4); 
+            border-color: var(--accent-cyan);
+        }
+
+        .theme-toggle {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 12px;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover { background: #334155; transform: scale(1.05); }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-content { 
+            max-width: 1350px; 
+            width: 100%; 
+            margin: 30px auto; 
+            padding: 0 24px; 
+            flex-grow: 1; 
+        }
+        
+        .app-panel { display: none; }
+        .app-panel.active { display: block; animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- BARRA DE PROGRESSO FLUTUANTE --- */
+        .progress-card { 
+            background: var(--glass-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            padding: 20px 24px; 
+            margin-bottom: 30px; 
+            position: sticky; 
+            top: 85px; 
+            z-index: 99; 
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(8px);
+        }
+        
+        .progress-info { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 700; font-size: 14px; color: var(--text-main); }
+        .bar-bg { width: 100%; height: 12px; background: var(--border-subtle); border-radius: 10px; overflow: hidden; padding: 2px; }
+        .bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #0284c7, #10b981); border-radius: 8px; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* --- TITULOS E CATEGORIAS --- */
+        .category-title { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--text-main); 
+            margin: 35px 0 16px; 
+            border-left: 4px solid var(--primary); 
+            padding: 12px 16px; 
+            background-color: var(--bg-card); 
+            border-radius: 0 8px 8px 0;
+            box-shadow: var(--shadow-sm);
+            border-top: 1px solid var(--border-subtle);
+            border-right: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- CHECKLIST GERAL --- */
+        .checklist-group { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        
+        .check-item { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            padding: 16px 20px; 
+            display: flex; 
+            gap: 16px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            align-items: flex-start;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .check-item:hover { border-color: var(--primary); transform: translateX(4px); box-shadow: var(--shadow-md); }
+        .check-item.checked { background: var(--success-light); border-color: #10b981; }
+        .check-item input { width: 22px; height: 22px; accent-color: #10b981; flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+        .check-text h4 { font-size: 15px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+        .check-text p { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+        .check-item.checked .check-text h4, .check-item.checked .check-text p { text-decoration: line-through; opacity: 0.7; }
+
+        /* --- SANFONA / GUIA PRÁTICO --- */
+        .guide-accordion { display: flex; flex-direction: column; gap: 14px; margin-bottom: 35px; }
+        
+        .guide-item { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            overflow: hidden; 
+            transition: all 0.2s ease; 
+            box-shadow: var(--shadow-sm); 
+        }
+        
+        .guide-summary { 
+            padding: 18px 22px; 
+            font-weight: 600; 
+            font-size: 14.5px; 
+            color: var(--text-main); 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            list-style: none; 
+            background: var(--bg-card); 
+            user-select: none; 
+            transition: background 0.2s; 
+        }
+        
+        .guide-summary::-webkit-details-marker { display: none; }
+        .guide-summary:hover { background: var(--primary-light); color: var(--primary); }
+        .guide-summary .title-flex { display: flex; align-items: center; gap: 12px; }
+        .guide-summary .arrow { transition: transform 0.3s ease; color: var(--text-muted); font-size: 14px; }
+        .guide-item[open] .guide-summary .arrow { transform: rotate(180deg); color: var(--primary); }
+        .guide-item[open] { border-color: var(--primary); box-shadow: var(--shadow-md); }
+        
+        .guide-content { 
+            padding: 20px 22px; 
+            border-top: 1px solid var(--border-subtle); 
+            font-size: 14px; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+            background: var(--bg-card); 
+        }
+        
+        .guide-content strong { color: var(--text-main); }
+        .guide-content code { background: var(--code-bg); color: var(--code-text); padding: 3px 8px; border-radius: 4px; font-family: 'Roboto Mono', monospace; font-size: 12.5px; font-weight: 700; border: 1px solid var(--border-color); }
+        .guide-content ul { margin-top: 10px; padding-left: 22px; }
+        .guide-content li { margin-bottom: 8px; }
+        
+        /* Lista formatada para os dicionários */
+        .dict-list { list-style: none; padding-left: 0 !important; }
+        .dict-list li { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px dashed var(--border-color); }
+        .dict-list li:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .dict-list .dict-code { min-width: 85px; flex-shrink: 0; }
+        .dict-list .dict-desc { color: var(--text-main); font-family: 'Roboto Mono', monospace; font-size: 13.5px; }
+
+        .guide-alert { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 12px 16px; border-radius: 6px; color: #92400e; font-size: 13px; margin-top: 12px; font-weight: 500; border: 1px solid #fef3c7; }
+        [data-theme="dark"] .guide-alert { background: #451a03; color: #fef3c7; border-color: #78350f; }
+
+        /* --- GRID DE SUPORTES 3D CAD --- */
+        .support-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+        
+        .support-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            padding: 18px; 
+            text-align: center; 
+            position: relative; 
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .support-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        
+        .support-visual { 
+            height: 130px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            background: var(--bg-body); 
+            border-radius: 8px; 
+            margin-bottom: 14px; 
+            border: 1px dashed var(--border-color); 
+            padding: 10px;
+        }
+        .support-visual svg { width: 100%; height: 100%; max-height: 100px; }
+        
+        .weld-tag { 
+            position: absolute; 
+            top: 12px; 
+            right: 12px; 
+            background: var(--danger-light); 
+            color: var(--danger); 
+            font-size: 11px; 
+            font-weight: 700; 
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            border: 1px solid #fecaca; 
+            font-family: 'Roboto Mono', monospace; 
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+        }
+        
+        .weld-none { background: var(--bg-body); color: var(--text-muted); border-color: var(--border-color); box-shadow: none; }
+        .support-card h4 { font-size: 16px; color: var(--text-main); font-weight: 700; letter-spacing: 0.5px; font-family: 'Roboto Mono', monospace; }
+
+        /* --- ESTILOS DA BIBLIOTECA DE COMPONENTES 3D CAD --- */
+        .lib-header { margin-bottom: 25px; }
+        .lib-header h2 { font-size: 24px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+        .lib-header p { font-size: 14px; color: var(--text-muted); }
+        
+        .lib-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
+        .lib-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+        .lib-tab { background: transparent; border: none; padding: 8px 14px; font-size: 13.5px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: 6px; transition: all 0.2s; }
+        .lib-tab:hover { color: var(--text-main); background: var(--border-subtle); }
+        .lib-tab.active { background: var(--primary-light); color: var(--primary); }
+
+        .lib-search-box { position: relative; min-width: 260px; }
+        .lib-search-box input { width: 100%; padding: 9px 14px 9px 38px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 13.5px; outline: none; transition: border-color 0.2s; }
+        .lib-search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+        .lib-search-box i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
+
+        .components-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .component-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+        .component-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
+        .comp-visual { width: 100%; height: 120px; background: var(--bg-body); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; border: 1px dashed var(--border-color); padding: 10px; }
+        .comp-visual svg { width: 100%; height: 100%; max-height: 95px; }
+        .comp-info { width: 100%; margin-bottom: 12px; }
+        .comp-info h4 { font-size: 14.5px; font-weight: 700; color: var(--text-main); margin-bottom: 3px; }
+        .comp-info span { font-size: 12px; color: var(--text-muted); font-family: 'Roboto Mono', monospace; font-weight: 600; }
+        .comp-btn { width: 100%; background: transparent; border: 1px solid var(--border-color); color: var(--primary); padding: 8px; border-radius: 6px; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; }
+        .comp-btn:hover { background: var(--primary-light); border-color: var(--primary); }
+
+        /* --- TABELAS E SIMBOLOGIA --- */
+        .black-table-wrapper { background: var(--navy-header); border-radius: 12px; padding: 24px; overflow-x: auto; box-shadow: var(--shadow-lg); border: 1px solid #334155; }
+        
+        .table-card { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); padding: 24px; overflow-x: auto; box-shadow: var(--shadow-sm); }
+        .bolts-table { width: 100%; border-collapse: collapse; }
+        .bolts-table th { background: var(--bg-body); color: var(--text-main); padding: 16px; text-align: left; border-bottom: 2px solid var(--border-color); font-size: 13px; font-weight: 700; text-transform: uppercase; }
+        .bolts-table td { padding: 16px; border-bottom: 1px solid var(--border-subtle); font-family: 'Roboto Mono', monospace; font-size: 13.5px; color: var(--text-main); }
+        .bolts-table tr:hover td { background-color: var(--bg-body); }
+
+        /* --- MARKUPS / REFERÊNCIAS --- */
+        .markup-item { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-color); 
+            border-radius: 10px; 
+            padding: 18px 20px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 18px; 
+            text-decoration: none; 
+            color: var(--text-main); 
+            transition: all 0.2s ease; 
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .markup-item:hover { background: var(--primary-light); border-color: var(--primary); transform: translateX(6px); }
+        .markup-item i { font-size: 26px; color: var(--danger); }
+
+        /* --- BOTÃO FLUTUANTE (FAB) E MODAIS --- */
+        .fab-symbol {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.45);
+            cursor: pointer;
+            z-index: 9999;
+            border: none;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .fab-symbol:hover {
+            transform: scale(1.1);
+            background-color: var(--primary-hover);
+        }
+        .fab-symbol i { font-size: 24px; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.65);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 92%;
+            max-width: 1200px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal-header {
+            padding: 18px 24px;
+            background-color: var(--navy-header);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+        }
+        .modal-header h3 { font-size: 16px; display: flex; align-items: center; gap: 12px; font-weight: 600; }
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 20px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background-color: #1e293b; color: #ffffff; }
+        .modal-body { padding: 24px; overflow-y: auto; background-color: var(--navy-header); }
+
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border-color); margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <!-- SVG GRADIENT DEFS GLOBAL -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true">
+        <defs>
+            <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#cbd5e1"/><stop offset="50%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#64748b"/>
+            </linearGradient>
+            <linearGradient id="metal-support" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#e2e8f0"/><stop offset="100%" stop-color="#94a3b8"/>
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand"><i class="fa-solid fa-layer-group"></i> Engineer Quality <span style="font-size: 12px; font-weight: 400; color: #94a3b8; margin-left: 4px;">| Isométricos</span></a>
+            <nav class="nav-links">
+                <button class="nav-btn active" onclick="switchTab('tab-checklist', this)"><i class="fa-solid fa-list-check"></i> Checklist</button>
+                <button class="nav-btn" onclick="switchTab('tab-suportes', this)"><i class="fa-solid fa-screwdriver-wrench"></i> Suportes</button>
+                <button class="nav-btn" onclick="switchTab('tab-biblioteca', this)"><i class="fa-solid fa-cubes"></i> Biblioteca</button>
+                <button class="nav-btn" onclick="switchTab('tab-bolts', this)"><i class="fa-solid fa-wrench"></i> Guia de Bolts</button>
+                <button class="nav-btn" onclick="switchTab('tab-markups', this)"><i class="fa-solid fa-file-pdf"></i> Markups</button>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Alternar Modo Claro/Escuro"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        
+        <!-- ABA CHECKLIST -->
+        <div id="tab-checklist" class="app-panel active">
+            <div class="progress-card">
+                <div class="progress-info">
+                    <span id="prog-txt"><i class="fa-solid fa-chart-line" style="margin-right:8px; color:var(--primary);"></i>Conformidade do Detalhamento: 0%</span>
+                    <span id="prog-count">0 de 14 etapas verificadas</span>
+                </div>
+                <div class="bar-bg"><div class="bar-fill" id="prog-fill"></div></div>
+            </div>
+
+            <div class="category-title"><i class="fa-solid fa-id-card-clip" style="margin-right: 10px; color:var(--primary);"></i> 1. Arquivos, Revisão e Carimbo (Inferior do Desenho)</div>
+            <div class="checklist-group">
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Nomenclatura e Revisão do Arquivo</h4><p>Arquivos .dwg e .pdf foram salvos corretamente na <strong>Rev A</strong> (ex: ..._01_A.dwg) ou na <strong>Rev 01</strong> (ex: ..._01_01.dwg).</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Lacunas de Assinatura (APPR. e DRN.)</h4><p>O campo <strong>APPR.</strong> está preenchido com "S. Rodriguez" e o campo <strong>DRN.</strong> foi preenchido com o seu nome (responsável pelo detalhamento).</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Dados Gerais e P&ID do Projeto</h4><p>Todas as informações batem com a planilha da ISO. O número do P&ID foi conferido ou preenchido com o padrão <code>XXX&FB030-000001</code> quando vazio.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Status da Emissão, Soldas e THR</h4><p>Os status de emissão foram atualizados para <strong>IFI</strong> na Rev A ou <strong>AFC</strong> na Rev 01. Os campos <em>Weld Number</em> e <em>THR Number</em> foram devidamente conferidos.</p></div></label>
+            </div>
+
+            <div class="category-title"><i class="fa-solid fa-boxes-stacked" style="margin-right: 10px; color:var(--primary);"></i> 2. Lista de Materiais (BOM) e Renumeração</div>
+            <div class="checklist-group">
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Equivalência e Renumeração Crescente</h4><p>Os materiais listados na BOM correspondem perfeitamente aos desenhados. A renumeração dos itens (PT NO) após os markups segue rigorosamente ordem crescente no desenho e na lista.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Planilha Master e Conversão de S.DUPLEX</h4><p>Os códigos foram localizados e verificados na planilha geral. Todos os itens identificados como "S.DUPLEX" tiveram o código alterado de <strong>"SS"</strong> para <strong>"SD"</strong> (ex: <code>...-200-SD</code>).</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Ajustes de Suportes Duplos na Lista</h4><p>Desenhos que apresentem dois suportes no mesmo ponto da chamada tiveram ambas as informações devidamente adicionadas na lista de materiais.</p></div></label>
+            </div>
+
+            <div class="category-title"><i class="fa-solid fa-pen-ruler" style="margin-right: 10px; color:var(--primary);"></i> 3. Verificação do Desenho, Layout e Limpeza Gráfica</div>
+            <div class="checklist-group">
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Distanciamento de Linhas e Cruzamentos</h4><p>Nenhuma linha está se cruzando de forma indevida e há uma distância mínima de <strong>1 mm</strong> entre as geometrias para garantir a nitidez da impressão.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Limpeza de Textos Obsoletos e Balloons</h4><p>Foram removidos termos obsoletos como <strong>"PE"</strong> e textos da malha como <strong>"#BAL.BA11..."</strong>. Todos os balloons de suportes foram apagados e substituídos por chamadas em texto limpo.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Numeração de Tubos e Cortes (Cut Pipe Length)</h4><p>A numeração dos tubos no desenho bate com a tabela <em>Cut Pipe Length</em>. Todas as conexões, principalmente cotovelos e tês, foram conferidas com a lista de materiais.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Isolamento Parcial, Linha Divisória e Hachuras</h4><p>Foi adicionada a linha de separação entre tubos isolados e não-isolados (quando houver). A representação da hachura angular do cliente e os textos de isolamento parcial foram validados.</p></div></label>
+            </div>
+
+            <div class="category-title"><i class="fa-solid fa-compass-drafting" style="margin-right: 10px; color:var(--primary);"></i> 4. Simbologia Normativa e Soldas de Campo</div>
+            <div class="checklist-group">
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Simbologia Geral e Textos Normativos</h4><p>Os textos e símbolos normativos foram checados de acordo com a tabela padrão: Penetração (STR), Elevação (EL), Inclinação (FALL 1:100), Reduções (DN50x25), Eixo Rotativo e Spools.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Soldas de Ajuste e Chamadas Especiais</h4><p>Os textos de solda de campo foram redigidos corretamente na formatação normatizada: <code>"TACK WELD"</code> e <code>FFW (INCL. 150mm CTF)</code>.</p></div></label>
+                <label class="check-item"><input type="checkbox" onchange="updateProgress()"><div class="check-text"><h4>Validação Final de Markups</h4><p>Todos os comentários de markup em vermelho solicitados pelo cliente foram integralmente inspecionados, aplicados e revisados na planta final.</p></div></label>
+            </div>
+        </div>
+
+        <!-- ABA SUPORTES 3D CAD -->
+        <div id="tab-suportes" class="app-panel">
+            <div class="category-title"><i class="fa-solid fa-book-open" style="margin-right: 10px; color:var(--primary);"></i> Guia Prático: Regras e Normas de Suportes</div>
+            
+            <div class="guide-accordion">
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-circle-question" style="color:var(--primary); font-size:16px;"></i> O que é e quando utilizar o Special Support (Suporte Especial)?</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <p>O <strong>Special Support</strong> (ex: <code>PS-L302-XXXX</code>) será utilizado sempre que o desenho enviado pelo cliente vier com <strong>DOIS suportes padrões juntos</strong> no mesmo ponto de tubulação (por exemplo: <em>U-BOLT + WELDED SHOE</em>, ou <em>ADAPTER FOR U-BOLT</em>, etc.).</p>
+                        <ul>
+                            <li>O código do special support sempre será diferente dos demais, mas seguirá rigorosamente o padrão <code>PS-LXXX-XXXX</code>.</li>
+                            <li><strong>Regra de Ouro:</strong> Quando vierem dois suportes no desenho, é <strong>obrigatório</strong> adicionar um suporte especial para substituí-los na indicação.</li>
+                        </ul>
+                        <div class="guide-alert"><i class="fa-solid fa-triangle-exclamation"></i> <strong>Atenção:</strong> O suporte especial <strong>NÃO terá nenhuma informação adicional</strong> em seu texto no desenho (não coloque ORI, nem "SEE SUPPORT DWG", apenas o código PS-LXXX-XXXX).</div>
+                    </div>
+                </details>
+
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-tag" style="color:var(--primary); font-size:16px;"></i> Como saber qual código usar nos Suportes Padrões?</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <p>Os suportes padrões geralmente chegam no desenho "bagunçados" com informações irrelevantes (como coordenadas <code>U: 34931mm</code> ou <code>SEE SUPPORT DWG</code>).</p>
+                        <p>Para saber qual código correto utilizar:</p>
+                        <ul>
+                            <li>Consulte o número do suporte diretamente na <strong>Tabela de Contagem de Materiais (BOM)</strong> na parte superior direita da folha.</li>
+                            <li>Você deve <strong>remover sempre todas as informações extras</strong> do bloco de texto do suporte no desenho.</li>
+                            <li>Deixe <strong>apenas</strong> o código, a orientação <code>ORI = D</code> e o número de solda (quando houver). Exemplo final: <code>100-GU03 | ORI = D</code>.</li>
+                            <li>As soldas normalmente são identificadas com números como <code>302</code>, <code>302A</code>, <code>509</code>, <code>509A</code>, etc.</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--primary); font-size:16px;"></i> Como funcionam os códigos dos Suportes Especiais?</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <p>Os suportes especiais sempre virão com o seu próprio código na lista, pois estes modelos são definidos especificamente pelo cliente por conta das particularidades do modelo 3D.</p>
+                        <p><strong>Como proceder no desenho:</strong></p>
+                        <ul>
+                            <li>O código do suporte especial derivará dos códigos dos suportes que ele está substituindo.</li>
+                            <li>Ao identificar o par de suportes no isométrico, remova a chamada dos dois suportes padrões e aponte apenas o chamado do suporte especial (ex: <code>PS-L302-6428</code>).</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-eye" style="color:var(--primary); font-size:16px;"></i> Como saber se um suporte terá solda ou não?</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <p>A verificação deve ser feita através do documento de referência: <strong>SUPPORT CATALOGUE (Rev 06 ou mais atual)</strong>, disponível no Sharepoint da equipe.</p>
+                        <ul>
+                            <li>As nomenclaturas e códigos que aparecem no catálogo para identificar as soldas são normalmente o <strong>primeiro ou o último trecho do código do suporte</strong>.</li>
+                            <li><strong>Dica Prática:</strong> Procure pela parte do código que possui sempre <strong>duas letras e dois números juntos</strong> (Exemplos: <code>GU03</code> em <em>100-GU03</em>, ou <code>UA03</code> em <em>UA03-M12</em>).</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+            
+            <div class="category-title"><i class="fa-solid fa-shapes" style="margin-right: 10px; color:var(--primary);"></i> Índice Visual de Suportes (Support Index 3D CAD)</div>
+            <div class="support-grid">
+                <!-- GH01 -->
+                <div class="support-card"><span class="weld-tag">Solda=503</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="38" r="18" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="40" y="56" width="20" height="26" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                        <line x1="22" y1="82" x2="78" y2="82" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </div><h4>GH01</h4></div>
+
+                <!-- GH03 -->
+                <div class="support-card"><span class="weld-tag">Solda=505</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="38" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <line x1="30" y1="38" x2="30" y2="65" stroke="#334155" stroke-width="2.5"/>
+                        <line x1="70" y1="38" x2="70" y2="65" stroke="#334155" stroke-width="2.5"/>
+                        <rect x="25" y="65" width="50" height="14" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                    </svg>
+                </div><h4>GH03</h4></div>
+
+                <!-- GL01 -->
+                <div class="support-card"><span class="weld-tag">Solda=506</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="42" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="22" y="62" width="56" height="10" fill="url(#metal-support)" stroke="#334155" stroke-width="1.5"/>
+                        <rect x="28" y="72" width="44" height="8" fill="#64748b" stroke="#334155" stroke-width="1.5"/>
+                    </svg>
+                </div><h4>GL01</h4></div>
+
+                <!-- GL02 -->
+                <div class="support-card"><span class="weld-tag">Solda=507</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="36" r="15" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <line x1="50" y1="51" x2="50" y2="76" stroke="#334155" stroke-width="3"/>
+                        <rect x="20" y="76" width="60" height="10" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                    </svg>
+                </div><h4>GL02</h4></div>
+
+                <!-- GL04 -->
+                <div class="support-card"><span class="weld-tag">Solda=302</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="38" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="30" y="54" width="40" height="18" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                        <line x1="20" y1="72" x2="80" y2="72" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </div><h4>GL04</h4></div>
+
+                <!-- GL05 -->
+                <div class="support-card"><span class="weld-tag">Solda=509</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="38" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <path d="M30,38 A 20 20 0 0 1 70,38 L70,72 L30,72 Z" fill="rgba(2,132,199,0.15)" stroke="#334155" stroke-width="2"/>
+                        <rect x="20" y="72" width="60" height="10" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                    </svg>
+                </div><h4>GL05</h4></div>
+
+                <!-- LS03 -->
+                <div class="support-card"><span class="weld-tag">Solda=514</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="42" r="17" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="30" y="58" width="40" height="16" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                    </svg>
+                </div><h4>LS03</h4></div>
+
+                <!-- PR04 -->
+                <div class="support-card"><span class="weld-tag">Solda=519</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="36" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <path d="M34,36 A 16 16 0 0 0 66,36" fill="none" stroke="#334155" stroke-width="2"/>
+                        <rect x="36" y="52" width="28" height="24" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                        <line x1="24" y1="76" x2="76" y2="76" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div><h4>PR04</h4></div>
+
+                <!-- SW01 -->
+                <div class="support-card"><span class="weld-tag">Solda=302</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="36" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="34" y="52" width="32" height="26" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                        <line x1="24" y1="78" x2="76" y2="78" stroke="#334155" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div><h4>SW01</h4></div>
+
+                <!-- SW04 -->
+                <div class="support-card"><span class="weld-tag">Solda=306</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="34" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="30" y="50" width="40" height="32" fill="url(#metal-support)" stroke="#334155" stroke-width="2"/>
+                    </svg>
+                </div><h4>SW04</h4></div>
+
+                <!-- WA01 -->
+                <div class="support-card"><span class="weld-tag">Solda=304</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <rect x="40" y="20" width="20" height="64" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <line x1="20" y1="52" x2="80" y2="52" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </div><h4>WA01</h4></div>
+
+                <!-- WA08 -->
+                <div class="support-card"><span class="weld-tag">Solda=306</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <line x1="38" y1="15" x2="38" y2="85" stroke="#334155" stroke-width="3"/>
+                        <line x1="52" y1="15" x2="52" y2="85" stroke="#334155" stroke-width="3"/>
+                        <rect x="52" y="32" width="22" height="28" fill="#ef4444" stroke="#334155" stroke-width="1.5"/>
+                        <rect x="52" y="60" width="28" height="10" fill="url(#metal-support)" stroke="#334155" stroke-width="1.5"/>
+                    </svg>
+                </div><h4>WA08</h4></div>
+
+                <!-- UA01 (Sem solda) -->
+                <div class="support-card"><span class="weld-tag weld-none">S/ SOLDA</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="46" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <path d="M30,46 Q30,16 50,16 Q70,16 70,46 L70,80 M30,46 L30,80" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div><h4>UA01</h4></div>
+
+                <!-- TS01 (Sem solda) -->
+                <div class="support-card"><span class="weld-tag weld-none">S/ SOLDA</span><div class="support-visual">
+                    <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="36" r="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                        <rect x="36" y="14" width="28" height="52" fill="url(#metal-support)" stroke="#64748b" stroke-width="2" stroke-dasharray="4"/>
+                    </svg>
+                </div><h4>TS01</h4></div>
+            </div>
+        </div>
+
+        <!-- ABA BIBLIOTECA DE COMPONENTES 3D CAD -->
+        <div id="tab-biblioteca" class="app-panel">
+            <div class="lib-header">
+                <h2>Biblioteca de Componentes</h2>
+                <p>Consulte os componentes utilizados nos isométricos em representação 3D CAD.</p>
+            </div>
+
+            <div class="lib-toolbar">
+                <div class="lib-tabs">
+                    <button class="lib-tab active" onclick="filterComponents('todos', this)">Todos</button>
+                    <button class="lib-tab" onclick="filterComponents('valvulas', this)">Válvulas</button>
+                    <button class="lib-tab" onclick="filterComponents('flanges', this)">Flanges</button>
+                    <button class="lib-tab" onclick="filterComponents('conexoes', this)">Conexões</button>
+                </div>
+                <div class="lib-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="comp-search" placeholder="Buscar componente..." onkeyup="searchComponents()">
+                </div>
+            </div>
+
+            <div class="components-grid" id="comp-grid">
+                <!-- Válvula Gaveta -->
+                <div class="component-card" data-category="valvulas" data-name="valvula gaveta gv">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100">
+                            <path d="M30,45 L90,45 L80,75 L40,75 Z" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <rect x="15" y="53" width="20" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="85" y="53" width="20" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="53" y="25" width="14" height="20" fill="url(#metal)" stroke="#334155" stroke-width="1.5"/>
+                            <ellipse cx="60" cy="22" rx="22" ry="6" fill="#0284c7" stroke="#0369a1" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Válvula Gaveta</h4>
+                        <span>GV</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('gv')">Ver detalhes</button>
+                </div>
+
+                <!-- Válvula Esfera -->
+                <div class="component-card" data-category="valvulas" data-name="valvula esfera bv">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100">
+                            <circle cx="60" cy="55" r="22" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <rect x="20" y="49" width="25" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="75" y="49" width="25" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="56" y="25" width="8" height="24" fill="url(#metal)" stroke="#334155" stroke-width="1.5"/>
+                            <path d="M42,20 L78,20" stroke="#0284c7" stroke-width="5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Válvula Esfera</h4>
+                        <span>BV</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('bv')">Ver detalhes</button>
+                </div>
+
+                <!-- Válvula Globo -->
+                <div class="component-card" data-category="valvulas" data-name="valvula globo gl">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100">
+                            <path d="M38,40 C30,40 30,70 60,70 C90,70 90,40 82,40 Z" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <rect x="15" y="48" width="25" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="80" y="48" width="25" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="54" y="22" width="12" height="22" fill="url(#metal)" stroke="#334155" stroke-width="1.5"/>
+                            <ellipse cx="60" cy="18" rx="16" ry="5" fill="#0284c7" stroke="#0369a1" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Válvula Globo</h4>
+                        <span>GL</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('gl')">Ver detalhes</button>
+                </div>
+
+                <!-- Válvula Retenção -->
+                <div class="component-card" data-category="valvulas" data-name="valvula retencao chk">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100">
+                            <polygon points="40,38 80,38 70,72 50,72" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <rect x="18" y="48" width="24" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="78" y="48" width="24" height="12" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <rect x="55" y="26" width="10" height="14" fill="url(#metal)" stroke="#334155" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Válvula Retenção</h4>
+                        <span>CHK</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('chk')">Ver detalhes</button>
+                </div>
+
+                <!-- Flange WN -->
+                <div class="component-card" data-category="flanges" data-name="flange wn rf">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100">
+                            <ellipse cx="60" cy="55" rx="36" ry="16" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <ellipse cx="60" cy="55" rx="18" ry="8" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/>
+                            <circle cx="36" cy="55" r="3.5" fill="#334155"/><circle cx="84" cy="55" r="3.5" fill="#334155"/>
+                            <circle cx="60" cy="44" r="3.5" fill="#334155"/><circle cx="60" cy="66" r="3.5" fill="#334155"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Flange WN</h4>
+                        <span>RF</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('flg_wn')">Ver detalhes</button>
+                </div>
+
+                <!-- Flange SW -->
+                <div class="component-card" data-category="flanges" data-name="flange sw sw">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100">
+                            <ellipse cx="60" cy="55" rx="34" ry="15" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <ellipse cx="60" cy="55" rx="20" ry="9" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/>
+                            <circle cx="38" cy="55" r="3" fill="#334155"/><circle cx="82" cy="55" r="3" fill="#334155"/>
+                            <circle cx="60" cy="43" r="3" fill="#334155"/><circle cx="60" cy="67" r="3" fill="#334155"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Flange SW</h4>
+                        <span>SW</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('flg_sw')">Ver detalhes</button>
+                </div>
+
+                <!-- Cotovelo 90° -->
+                <div class="component-card" data-category="conexoes" data-name="cotovelo 90 elb 90">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100" fill="none">
+                            <path d="M35,80 L35,45 C35,28 48,15 65,15 L85,15" stroke="url(#metal)" stroke-width="18" stroke-linecap="square"/>
+                            <path d="M35,80 L35,45 C35,28 48,15 65,15 L85,15" stroke="#334155" stroke-width="2"/>
+                            <ellipse cx="35" cy="80" rx="9" ry="5" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <ellipse cx="85" cy="15" rx="5" ry="9" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Cotovelo 90º</h4>
+                        <span>ELB 90</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('elb90')">Ver detalhes</button>
+                </div>
+
+                <!-- Cotovelo 45° -->
+                <div class="component-card" data-category="conexoes" data-name="cotovelo 45 elb 45">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100" fill="none">
+                            <path d="M25,80 L55,50 L85,50" stroke="url(#metal)" stroke-width="18" stroke-linecap="square"/>
+                            <path d="M25,80 L55,50 L85,50" stroke="#334155" stroke-width="2"/>
+                            <ellipse cx="25" cy="80" rx="9" ry="5" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                            <ellipse cx="85" cy="50" rx="5" ry="9" fill="#94a3b8" stroke="#334155" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Cotovelo 45º</h4>
+                        <span>ELB 45</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('elb45')">Ver detalhes</button>
+                </div>
+
+                <!-- Té Igual -->
+                <div class="component-card" data-category="conexoes" data-name="te igual tee">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100" fill="none">
+                            <path d="M20,55 L100,55" stroke="url(#metal)" stroke-width="16"/>
+                            <path d="M60,55 L60,20" stroke="url(#metal)" stroke-width="16"/>
+                            <path d="M20,55 L100,55" stroke="#334155" stroke-width="2"/>
+                            <path d="M60,55 L60,20" stroke="#334155" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Té Igual</h4>
+                        <span>TEE</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('tee')">Ver detalhes</button>
+                </div>
+
+                <!-- Redução Concêntrica -->
+                <div class="component-card" data-category="conexoes" data-name="reducao concentrica red con">
+                    <div class="comp-visual">
+                        <svg viewBox="0 0 120 100" fill="none">
+                            <polygon points="25,43 95,35 95,65 25,57" fill="url(#metal)" stroke="#334155" stroke-width="2"/>
+                            <ellipse cx="25" cy="50" rx="3" ry="7" fill="#64748b" stroke="#334155" stroke-width="1"/>
+                            <ellipse cx="95" cy="50" rx="3" ry="15" fill="#64748b" stroke="#334155" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <div class="comp-info">
+                        <h4>Redução Concêntrica</h4>
+                        <span>RED.CON</span>
+                    </div>
+                    <button class="comp-btn" onclick="openComponentDetail('red_con')">Ver detalhes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA GUIA DE BOLTS -->
+        <div id="tab-bolts" class="app-panel">
+            <div class="category-title"><i class="fa-solid fa-table" style="margin-right: 10px; color:var(--primary);"></i> Matriz de Hardware (FLG - GASKET - BOLT)</div>
+            <div class="table-card">
+                <table class="bolts-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">ITEM</th>
+                            <th>Ø TUBO (DN)</th>
+                            <th>FLANGE</th>
+                            <th>GASKET</th>
+                            <th>BOLT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>20</td><td>PF00610</td><td>PG00281</td><td>PB00316</td></tr>
+                        <tr><td>2</td><td>20</td><td>PF00610</td><td>PG00135</td><td>PB00316</td></tr>
+                        <tr><td>3</td><td>25</td><td>PF00440</td><td>PG00136</td><td>PB00316</td></tr>
+                        <tr><td>4</td><td>40</td><td>PF00444</td><td>PG00137</td><td>PB00324</td></tr>
+                        <tr><td>5</td><td>50</td><td>PF00450</td><td>PG00144</td><td>PB00324</td></tr>
+                        <tr><td>6</td><td>80</td><td>PF00460</td><td>PG00109</td><td>PB00331</td></tr>
+                        <tr><td>7</td><td>32</td><td>PF00514</td><td>PG00138</td><td>PB00324</td></tr>
+                        <tr><td>8</td><td>80</td><td>PV01000</td><td>PG00136</td><td>PB00316</td></tr>
+                        <tr><td>9</td><td>25</td><td>PF00407</td><td>PG00136</td><td>PB00316</td></tr>
+                        <tr><td>10</td><td>100</td><td>PF00465</td><td>PG00110</td><td>PB00325</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="category-title" style="margin-top: 40px;"><i class="fa-solid fa-list-ul" style="margin-right: 10px; color:var(--primary);"></i> Dicionário de Códigos e Especificações</div>
+            
+            <div class="guide-accordion">
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-circle-notch" style="color:var(--primary); font-size:16px;"></i> Flanges (Códigos PF)</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <ul class="dict-list">
+                            <li><div class="dict-code"><code>PF00407</code></div><div class="dict-desc">T105 FLG, SS316L EM 1.4404, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00440</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, ΤΗΚ 3.2MM, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00444</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, THK 6.6MM, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00450</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, THK 4.0MM, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00460</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, ΤΗΚ 4.0MM, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00465</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, THK 6.3MM, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00514</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, THK 3.6MM, PN16, RF, EN1092-1</div></li>
+                            <li><div class="dict-code"><code>PF00610</code></div><div class="dict-desc">T11 FLG, SS316L EM 1.4404, THK 3.2MM, PN16, RF, EN1092-1</div></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-life-ring" style="color:var(--primary); font-size:16px;"></i> Gaskets / Juntas (Códigos PG)</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <ul class="dict-list">
+                            <li><div class="dict-code"><code>PG00109</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00110</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00135</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00136</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00137</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00138</code></div><div class="dict-desc">GASKET, EXP GRAPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00144</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                            <li><div class="dict-code"><code>PG00281</code></div><div class="dict-desc">GASKET, EXP GRSPF INSRT, RF, PN16, EN 1514-1</div></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-wrench" style="color:var(--primary); font-size:16px;"></i> Bolts / Parafusos (Códigos PB)</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <ul class="dict-list">
+                            <li><div class="dict-code"><code>PB00316</code></div><div class="dict-desc">75 W/2 HVY. HEX. NUTS ISO 4032 DIN 934 STUDBOLT A4-70 STEEL TO ISO 3506-1 DIN 976</div></li>
+                            <li><div class="dict-code"><code>PB00324</code></div><div class="dict-desc">85 W/2 HVY. HEX. NUTS ISO 4032 DIN 934 STUDBOLT A4-70 STEEL TO ISO 3506-1 DIN 976</div></li>
+                            <li><div class="dict-code"><code>PB00325</code></div><div class="dict-desc">90 W/2 HVY. HEX. NUTS ISO 4032 DIN 934 STUDBOLT A4-70 STEEL TO ISO 3506-1 DIN 976</div></li>
+                            <li><div class="dict-code"><code>PB00331</code></div><div class="dict-desc">140 W/2 HVY. HEX. NUTS ISO 4032 DIN 934 STUDBOLT A4-70 STEEL TO ISO 3506-1 DIN 976</div></li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="guide-item">
+                    <summary class="guide-summary">
+                        <div class="title-flex"><i class="fa-solid fa-faucet" style="color:var(--primary); font-size:16px;"></i> Válvulas (Códigos PV)</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </summary>
+                    <div class="guide-content">
+                        <ul class="dict-list">
+                            <li><div class="dict-code"><code>PV01000</code></div><div class="dict-desc">BALL, FLANGE TYPE, RF, PN16, SS 316L, PED G2, S27</div></li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <!-- ABA MARKUPS -->
+        <div id="tab-markups" class="app-panel">
+            <div class="category-title"><i class="fa-solid fa-folder-open" style="margin-right: 10px; color:var(--primary);"></i> Markups e Referências de Normas</div>
+            <div class="table-card" style="padding: 24px;">
+                <p style="margin-bottom: 20px; font-weight: 500; color: var(--text-muted);">Acesse abaixo os documentos de referência para a base de detalhamento técnico:</p>
+                <a href="+NR_ISO-015_09-06-2026_Signed.pdf" class="markup-item" target="_blank"><i class="fa-solid fa-file-pdf"></i> NR_ISO-015 (Signed)</a>
+                <a href="+NR_ISO-014_09-06-2026_Signed.pdf" class="markup-item" target="_blank"><i class="fa-solid fa-file-pdf"></i> NR_ISO-014 (Signed)</a>
+                <a href="+NR_ISO-002_26-03-2026_signed.pdf.pdf" class="markup-item" target="_blank"><i class="fa-solid fa-file-pdf"></i> NR_ISO-002 (Signed)</a>
+                <a href="+NR_ISO-005-006-SIGNED_21.04.2026.pdf" class="markup-item" target="_blank"><i class="fa-solid fa-file-pdf"></i> NR_ISO-005-006 (Signed)</a>
+                <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 20px; border-top: 1px dashed var(--border-color); padding-top: 15px;"><i class="fa-solid fa-info-circle" style="margin-right:6px;"></i>* Nota: Certifique-se de manter os arquivos PDF na mesma pasta que este arquivo HTML para que os links funcionem localmente.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- BOTÃO FLUTUANTE (FAB) PARA A TABELA DE SIMBOLOGIA -->
+    <button class="fab-symbol" onclick="openSymbolModal()" title="Abrir Tabela de Simbologia">
+        <i class="fa-solid fa-circle-nodes"></i>
+    </button>
+
+    <!-- POP-UP MODAL DA TABELA DE SIMBOLOGIA -->
+    <div id="symbol-modal" class="modal-overlay" onclick="handleModalClick(event, 'symbol-modal')">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-compass-drafting"></i> Simbologia Normativa de Detalhamento</h3>
+                <button class="modal-close" onclick="closeSymbolModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <img src="IMAGENS/TABELA%20SIMBOLOGIA.png" alt="Tabela de simbologia normativa" style="display: block; width: 100%; height: auto; border-radius: 6px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP MODAL DE DETALHES DO COMPONENTE -->
+    <div id="comp-modal" class="modal-overlay" onclick="handleModalClick(event, 'comp-modal')">
+        <div class="modal-container" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3 id="comp-modal-title"><i class="fa-solid fa-cube"></i> Detalhes do Componente</h3>
+                <button class="modal-close" onclick="closeComponentModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="background-color: var(--bg-card); color: var(--text-main); padding: 24px;">
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Código Padrão / Identificação:</strong>
+                    <div id="comp-modal-code" style="font-family: 'Roboto Mono', monospace; font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 2px;"></div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Material / Especificação:</strong>
+                    <div id="comp-modal-material" style="font-family: 'Roboto Mono', monospace; font-size: 13.5px; margin-top: 2px;"></div>
+                </div>
+                <div style="margin-bottom: 16px;">
+                    <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Norma Aplicável:</strong>
+                    <div id="comp-modal-standard" style="font-family: 'Roboto Mono', monospace; font-size: 13.5px; margin-top: 2px;"></div>
+                </div>
+                <div style="margin-bottom: 24px;">
+                    <strong style="color: var(--text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Descrição Técnica:</strong>
+                    <p id="comp-modal-desc" style="font-size: 13.5px; line-height: 1.6; margin-top: 4px; color: var(--text-main);"></p>
+                </div>
+                <div style="text-align: right;">
+                    <button class="comp-btn" style="width: auto; padding: 10px 24px;" onclick="closeComponentModal()">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer><strong>ENGINEER QUALITY SYSTEM</strong> &copy; 2026 - Controle de Qualidade e Detalhamento Isométrico</footer>
+
+    <script>
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.app-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress() {
+            const total = document.querySelectorAll('.check-item input').length;
+            const checked = document.querySelectorAll('.check-item input:checked').length;
+            const pct = Math.round((checked / total) * 100);
+            document.getElementById('prog-fill').style.width = pct + '%';
+            document.getElementById('prog-txt').innerHTML = '<i class="fa-solid fa-chart-line" style="margin-right:8px; color:var(--primary);"></i>Conformidade do Detalhamento: ' + pct + '%';
+            document.getElementById('prog-count').innerText = checked + ' de ' + total + ' etapas verificadas';
+            document.querySelectorAll('.check-item').forEach(item => {
+                if(item.querySelector('input').checked) item.classList.add('checked');
+                else item.classList.remove('checked');
+            });
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+
+        /* Base de Dados Técnica dos Componentes */
+        const componentData = {
+            'gv': { title: 'Válvula Gaveta (GV)', code: 'VAL-GV-316L', material: 'ASTM A182 Gr. F316L / CF8M', standard: 'ASME B16.34 / API 600', desc: 'Válvula de bloqueio bidirecional para serviços gerais em linhas de processo, com haste ascendente (OS&Y) e cunha flexível.' },
+            'bv': { title: 'Válvula Esfera (BV)', code: 'VAL-BV-316L', material: 'ASTM A351 CF8M / SS316L', standard: 'ASME B16.34 / API 6D', desc: 'Válvula de fecho rápido com passagem plena ou reduzida, excelente estanqueidade e acionamento por alavanca.' },
+            'gl': { title: 'Válvula Globo (GL)', code: 'VAL-GL-316L', material: 'ASTM A182 Gr. F316L', standard: 'ASME B16.34', desc: 'Indicada para regulação de vazão e estrangulamento severo, projetada para suportar diferenciais de pressão elevados.' },
+            'chk': { title: 'Válvula Retenção (CHK)', code: 'VAL-CHK-316L', material: 'ASTM A351 CF8M', standard: 'ASME B16.34', desc: 'Dispositivo automático que previne o refluxo do fluido no sistema de tubulação.' },
+            'flg_wn': { title: 'Flange WN - Weld Neck (RF)', code: 'FLG-WN-RF-150', material: 'ASTM A182 Gr. F316L', standard: 'ASME B16.5', desc: 'Flange com pescoço soldado de topo, ideal para altas pressões, temperaturas severas e cargas cíclicas.' },
+            'flg_sw': { title: 'Flange SW - Socket Weld', code: 'FLG-SW-150', material: 'ASTM A182 Gr. F316L', standard: 'ASME B16.5', desc: 'Flange de encaixe para solda, recomendado para linhas de menor diâmetro (DN <= 50) e pressões moderadas.' },
+            'elb90': { title: 'Cotovelo 90º (ELB 90)', code: 'CON-ELB90-LR', material: 'ASTM A403 WP316L SMLS', standard: 'ASME B16.9', desc: 'Conexão curva de raio longo (1.5x DN) para mudança de direção de 90 graus com menor perda de carga.' },
+            'elb45': { title: 'Cotovelo 45º (ELB 45)', code: 'CON-ELB45-LR', material: 'ASTM A403 WP316L SMLS', standard: 'ASME B16.9', desc: 'Conexão curva de raio longo para deflexão angular de 45 graus.' },
+            'tee': { title: 'Té Igual (TEE)', code: 'CON-TEE-EQ', material: 'ASTM A403 WP316L SMLS', standard: 'ASME B16.9', desc: 'Conexão em formato de "T" para derivação de fluxo com três aberturas de igual diâmetro nominal.' },
+            'red_con': { title: 'Redução Concêntrica (RED.CON)', code: 'CON-RED-CON', material: 'ASTM A403 WP316L SMLS', standard: 'ASME B16.9', desc: 'Utilizada para conectar tubos de diâmetros diferentes mantendo o eixo central alinhado em tubulações verticais ou horizontais.' }
+        };
+
+        function openComponentDetail(key) {
+            const comp = componentData[key];
+            if (!comp) return;
+            document.getElementById('comp-modal-title').innerHTML = `<i class="fa-solid fa-cube" style="color:var(--primary);"></i> ${comp.title}`;
+            document.getElementById('comp-modal-code').innerText = comp.code;
+            document.getElementById('comp-modal-material').innerText = comp.material;
+            document.getElementById('comp-modal-standard').innerText = comp.standard;
+            document.getElementById('comp-modal-desc').innerText = comp.desc;
+            document.getElementById('comp-modal').classList.add('active');
+        }
+
+        function closeComponentModal() {
+            document.getElementById('comp-modal').classList.remove('active');
+        }
+
+        /* Funções da Biblioteca de Componentes (Filtros e Busca) */
+        function filterComponents(category, btn) {
+            document.querySelectorAll('.lib-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.component-card');
+            cards.forEach(card => {
+                if (category === 'todos' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchComponents() {
+            const query = document.getElementById('comp-search').value.toLowerCase();
+            const cards = document.querySelectorAll('.component-card');
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        /* Funções do Pop-up da Simbologia */
+        function openSymbolModal() {
+            document.getElementById('symbol-modal').classList.add('active');
+        }
+
+        function closeSymbolModal() {
+            document.getElementById('symbol-modal').classList.remove('active');
+        }
+
+        function handleModalClick(event, modalId) {
+            if (event.target.id === modalId) {
+                if (modalId === 'symbol-modal') closeSymbolModal();
+                if (modalId === 'comp-modal') closeComponentModal();
+            }
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeSymbolModal();
+                closeComponentModal();
+            }
+        });
+    </script>
+</body>
+</html>
